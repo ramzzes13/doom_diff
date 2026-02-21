@@ -339,22 +339,24 @@ When the model generates frames with a constant action, the mean frame drift (MS
 \paragraph{Movement test.}
 Under a patterned action sequence (forward, turn left, forward, turn right), the mean frame-to-frame change is 0.087 $\pm$ 0.054, indicating the model produces temporally smooth transitions with appropriate variation.
 
-\subsection{Inference Performance}
+\subsection{Inference Performance and Sampling Ablation}
+
+Table~\ref{tab:performance} reports inference quality and speed as a function of DDIM sampling steps. Four steps provides the best quality--speed tradeoff: PSNR peaks at 15.9~dB with 7.7~FPS on a single H100 GPU. Increasing to 8 or 16 steps decreases both quality and speed, as the DDIM schedule with many steps traverses noise levels the model was not explicitly trained to handle. A single step achieves 24.3~FPS but degenerates to 7.1~dB PSNR. Two steps recover most quality (14.8~dB) at 12.5~FPS, offering a viable low-latency option.
 
 \begin{table}[t]
-\caption{Inference performance on a single NVIDIA H100 GPU.}
+\caption{Inference performance on a single NVIDIA H100 GPU. PSNR measured via teacher-forcing (50 samples).}
 \label{tab:performance}
 \centering
 \small
-\begin{tabular}{@{}lc@{}}
+\begin{tabular}{@{}rccr@{}}
 \toprule
-\textbf{Metric} & \textbf{Value} \\
+\textbf{DDIM steps} & \textbf{PSNR}$\uparrow$ & \textbf{FPS}$\uparrow$ & \textbf{Latency} \\
 \midrule
-FPS & 7.5 \\
-Latency per frame & 132.7 ms \\
-Latency std & 0.12 ms \\
-DDIM steps & 4 \\
-Model size (trainable) & 9.8M params \\
+1 & 7.1 & 24.3 & 41 ms \\
+2 & 14.8 & 12.5 & 80 ms \\
+\textbf{4} & \textbf{15.9} & \textbf{7.7} & \textbf{130 ms} \\
+8 & 15.2 & 4.0 & 250 ms \\
+16 & 14.7 & 2.0 & 490 ms \\
 \bottomrule
 \end{tabular}
 \end{table}
