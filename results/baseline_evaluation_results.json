@@ -1,0 +1,30 @@
+{
+  "teacher_forcing": {
+    "psnr_mean": 15.989581851959228,
+    "psnr_std": 1.63192449097221,
+    "lpips_mean": 0.5239652478694916,
+    "lpips_std": 0.09578252663203425
+  },
+  "autoregressive": {
+    "overall_psnr_mean": 16.467411690950392,
+    "overall_psnr_std": 0.6129917947129194,
+    "psnr_horizon_10": 16.362676849365233,
+    "psnr_horizon_20": 16.380874910354613,
+    "psnr_horizon_50": 16.474000484466554
+  },
+  "performance": {
+    "inference_fps": 7.5505681732774805,
+    "latency_ms": 132.44036436080933,
+    "latency_std_ms": 0.19370601009190674
+  },
+  "comparison": {
+    "tf_psnr_baseline": 15.989581851959228,
+    "tf_psnr_memory": 16.103595275878906,
+    "tf_psnr_delta": -0.11401342391967795,
+    "tf_lpips_baseline": 0.5239652478694916,
+    "tf_lpips_memory": 0.5051831752061844,
+    "tf_lpips_delta": 0.018782072663307225,
+    "fps_baseline": 7.5505681732774805,
+    "fps_memory": 7.536745484996379
+  }
+}
