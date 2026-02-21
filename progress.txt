@@ -1,0 +1,55 @@
+# Progress Log for doom_diff
+Started: Sat Feb 21 09:43:48 PM MSK 2026
+---
+
+## Iteration 1 (commits 888f874..c95dadc)
+- Implemented full project structure: doom_env, ppo_agent, memory_module, diffusion_model, trainer, evaluation, data_collector
+- Trained PPO agent for 200K timesteps on ViZDoom "basic" scenario
+- Collected 120 trajectories (1024 frames each, ~120K frames total)
+- Trained MemGameNGen diffusion model for 10K steps on single H100 GPU
+- Ran full evaluation suite: teacher forcing, autoregressive, controllability, scripted tests
+- Built interactive inference demo
+- Key results: PSNR 16.1 dB (teacher forcing), 7.5 FPS, controllability mean 0.35
+
+## Iteration 2 (commits d03979e..a66b74d) - CURRENT
+- Downloaded ICML 2025 LaTeX template (icml2025.sty, icml2025.bst)
+- Wrote full 8-page ICML-format LaTeX paper with ALL real experimental results
+- Generated 7 publication-quality figures from real data:
+  - training_curves.pdf, evaluation_metrics.pdf, controllability.pdf
+  - architecture.pdf, drift_analysis.pdf
+  - state_prediction.pdf, psnr_horizon.pdf, ddim_ablation.pdf
+- Verified ALL 25 BibTeX citations against actual arXiv/venue records (web search):
+  - Fixed 9 citations with wrong author names, titles, or entry types
+  - All 19 cited references now verified correct
+- Fixed trainable parameter count: 9.8M (not 6.3M as initially reported)
+- Fixed state head architecture notation: 768→256→256→2
+- Ran DDIM sampling steps ablation (1/2/4/8/16 steps):
+  - 4 steps optimal: 15.9 dB PSNR, 7.7 FPS
+  - More steps hurt quality (8 steps: 15.2 dB, 16 steps: 14.7 dB)
+- Removed estimated baseline numbers (15.83/0.518) - not from real experiments
+- Cross-verified ALL paper numbers against evaluation_results.json and training_log.json
+
+### Baseline training IN PROGRESS
+- Script: scripts/06_train_baseline.py (memory_enabled=False)
+- Running on GPU 3, started ~21:49 MSK
+- Expected completion: ~00:15 MSK (2.5 hours total)
+- Evaluation script ready: scripts/07_evaluate_baseline.py
+- After completion: run eval, update Table 2, re-commit
+
+## What Remains
+1. [IN PROGRESS] Baseline model training (~2 hours remaining)
+2. [PENDING] Run baseline evaluation (07_evaluate_baseline.py)
+3. [PENDING] Update paper Table 2 with real baseline PSNR/LPIPS numbers
+4. [PENDING] Add baseline row back to paper and re-verify
+5. [OPTIONAL] Memory tokens ablation (K=4, 8, 16) - requires additional training
+6. [OPTIONAL] GRU vs cross-attention comparison - requires additional training
+7. Final commit and push with all results
+
+## Key Files
+- Paper: paper/main.tex (8 pages, compiles cleanly)
+- References: paper/references.bib (25 entries, 19 cited, all verified)
+- Figures: paper/figures/*.pdf (8 figures from real data)
+- Results: results/evaluation_results.json, results/ddim_ablation.json
+- Training log: results/logs/training_log.json
+- Checkpoints: checkpoints/diffusion/memgamengen_final.pt (10K steps)
+- Baseline checkpoint: checkpoints/baseline/ (training in progress)
