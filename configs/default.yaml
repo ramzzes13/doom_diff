@@ -1,0 +1,113 @@
+# MemGameNGen Default Configuration
+
+# Environment
+env:
+  resolution: [160, 120]  # Width x Height - small for GPU memory
+  frame_skip: 4           # Apply each action for N frames
+  num_actions: 8          # DOOM action space size
+  scenario: "basic"       # ViZDoom scenario
+  game_variables:         # Variables to track from ViZDoom
+    - HEALTH
+    - AMMO2
+    - ARMOR
+    - KILLCOUNT
+
+# PPO Agent (for data collection)
+ppo:
+  hidden_dim: 256
+  lr: 3.0e-4
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_epsilon: 0.2
+  value_coef: 0.5
+  entropy_coef: 0.01
+  num_envs: 1
+  steps_per_update: 512
+  num_epochs: 4
+  batch_size: 128
+  total_timesteps: 200000
+  checkpoint_interval: 50000
+
+# Data Collection
+data:
+  num_trajectories: 500
+  max_trajectory_length: 2048
+  save_dir: "data/trajectories"
+  frame_format: "png"     # png or npz
+  include_random_policy: true
+  random_policy_fraction: 0.1
+
+# Diffusion Model
+model:
+  # Base model
+  pretrained_model: "CompVis/stable-diffusion-v1-4"
+  use_lora: true
+  lora_rank: 16
+  lora_alpha: 32
+
+  # Frame conditioning
+  num_context_frames: 4   # Number of past frames to condition on (reduced for GPU memory)
+  latent_channels: 4      # VAE latent channels
+
+  # Memory
+  memory_enabled: true
+  num_memory_tokens: 16
+  memory_dim: 768          # Match cross-attention dim
+  memory_update_type: "gru" # gru, cross_attention, or transformer
+  memory_update_every: 1   # Update memory every N frames
+
+  # Action conditioning
+  action_embed_dim: 128
+  action_conditioning: "cross_attention"  # cross_attention or add
+
+  # State head (auxiliary supervision)
+  state_head_enabled: true
+  state_head_hidden: 256
+  num_state_variables: 4   # health, ammo, armor, killcount
+
+  # Noise augmentation (GameNGen)
+  noise_augmentation: true
+  noise_aug_max_level: 0.7
+
+# Training
+training:
+  num_epochs: 50
+  batch_size: 1
+  gradient_accumulation_steps: 4
+  lr: 1.0e-4
+  lr_scheduler: "cosine"
+  warmup_steps: 500
+  max_train_steps: 20000
+  mixed_precision: "fp16"
+  gradient_checkpointing: true
+  save_every: 2000
+  eval_every: 1000
+  log_every: 50
+  seed: 42
+  gpu_id: 0  # Which GPU to use
+
+  # Loss weights
+  diffusion_loss_weight: 1.0
+  state_loss_weight: 0.1
+  action_consistency_weight: 0.05
+
+# Inference
+inference:
+  num_inference_steps: 4   # DDIM steps
+  guidance_scale: 1.0      # No classifier-free guidance
+  scheduler: "ddim"
+
+# Evaluation
+evaluation:
+  num_eval_trajectories: 20
+  eval_trajectory_length: 512
+  metrics:
+    - psnr
+    - lpips
+    - fvd
+    - state_accuracy
+    - controllability
+  scripted_tests:
+    - idle_test
+    - movement_test
+    - pickup_test
