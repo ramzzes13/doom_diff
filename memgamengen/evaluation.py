@@ -408,16 +408,19 @@ class MemGameNGenEvaluator:
                 gt_obs1, _, _, _ = self.env.step(action_idx)
                 gt_obs2, _, _, _ = self.env.step(action_idx)
 
-                # Measure predicted visual change
-                pred_diff = (out1["frame"].cpu() - context[:, -1:].cpu()).abs().mean().item()
+                # Measure predicted visual change (convert to [0,1] range)
+                pred_01 = (out1["frame"].cpu().clamp(-1, 1) + 1) / 2
+                ctx_01 = (context[:, -1:].cpu().clamp(-1, 1) + 1) / 2
+                pred_diff = (pred_01 - ctx_01).abs().mean().item()
 
-                # Measure ground truth visual change
+                # Measure ground truth visual change (in [0,1] range)
                 gt_diff = np.abs(
                     gt_obs1.astype(float) - obs.astype(float)
                 ).mean() / 255.0
 
                 # Consistency: how close is pred change to gt change
-                consistency = 1.0 - min(abs(pred_diff - gt_diff) / max(gt_diff + 1e-8, 1e-8), 1.0)
+                max_diff = max(pred_diff, gt_diff, 1e-6)
+                consistency = 1.0 - min(abs(pred_diff - gt_diff) / max_diff, 1.0)
                 action_consistency[action_idx].append(consistency)
 
                 obs = gt_obs2
@@ -496,11 +499,11 @@ class MemGameNGenEvaluator:
             drift = F.mse_loss(pred_frame.cpu(), first_frame).item()
             frame_diffs.append(drift)
 
-            # Update context
-            pred_for_ctx = pred_frame.squeeze(0).cpu()
+            # Update context (keep everything on device)
+            pred_for_ctx = pred_frame.squeeze(0)
             context_list = [context[0, i] for i in range(1, self.model.num_context_frames)]
             context_list.append(pred_for_ctx)
-            context = torch.stack(context_list).unsqueeze(0).to(self.device)
+            context = torch.stack(context_list).unsqueeze(0)
 
         return {
             "idle_drift_mean": float(np.mean(frame_diffs)),
@@ -559,15 +562,15 @@ class MemGameNGenEvaluator:
             memory_state = outputs.get("memory_state", memory_state)
 
             # Measure frame-to-frame change
-            prev_frame = context[:, -1:]
+            prev_frame = context[:, -1]
             change = F.mse_loss(pred_frame.cpu(), prev_frame.cpu()).item()
             frame_changes.append(change)
 
-            # Update context
-            pred_for_ctx = pred_frame.squeeze(0).cpu()
+            # Update context (keep everything on device)
+            pred_for_ctx = pred_frame.squeeze(0)
             context_list = [context[0, i] for i in range(1, self.model.num_context_frames)]
             context_list.append(pred_for_ctx)
-            context = torch.stack(context_list).unsqueeze(0).to(self.device)
+            context = torch.stack(context_list).unsqueeze(0)
 
         return {
             "movement_change_mean": float(np.mean(frame_changes)),
@@ -627,11 +630,11 @@ class MemGameNGenEvaluator:
             if done:
                 obs, info = self.env.reset()
 
-            # Update context
-            pred_for_ctx = outputs["frame"].squeeze(0).cpu()
+            # Update context (keep everything on device)
+            pred_for_ctx = outputs["frame"].squeeze(0)
             context_list = [context[0, i] for i in range(1, self.model.num_context_frames)]
             context_list.append(pred_for_ctx)
-            context = torch.stack(context_list).unsqueeze(0).to(self.device)
+            context = torch.stack(context_list).unsqueeze(0)
 
         if state_preds:
             results["num_state_predictions"] = len(state_preds)

@@ -1,0 +1,50 @@
+{
+  "teacher_forcing": {
+    "psnr_mean": 16.103595275878906,
+    "psnr_std": 1.7132265035981793,
+    "lpips_mean": 0.5051831752061844,
+    "lpips_std": 0.10707677952665882
+  },
+  "autoregressive": {
+    "fps_mean": 7.475986936671029,
+    "fps_std": 0.01359183547142471,
+    "psnr_horizon_10": 15.123372316360474,
+    "psnr_horizon_50": 15.199308172225953,
+    "psnr_horizon_100": 15.476583123207092,
+    "psnr_horizon_200": 15.553936353806526,
+    "state_error_horizon_10": 380.7275,
+    "state_error_horizon_50": 112.83683776855469,
+    "state_error_horizon_100": 80.63584439086914,
+    "state_error_horizon_200": 75.40556648008285
+  },
+  "controllability": {
+    "controllability_action_0": 0.0258492911235239,
+    "controllability_action_1": 0.11536118898933141,
+    "controllability_action_2": 0.4865206511600048,
+    "controllability_action_3": 0.49066894889966306,
+    "controllability_action_4": 0.3967508608069056,
+    "controllability_action_5": 0.39524417851037696,
+    "controllability_action_6": 0.4456116106455227,
+    "controllability_action_7": 0.4431509574594191,
+    "controllability_mean": 0.34989471094934343
+  },
+  "idle_test": {
+    "idle_drift_mean": 0.07686614990234375,
+    "idle_drift_max": 0.184814453125,
+    "idle_drift_final": 0.04351806640625
+  },
+  "movement_test": {
+    "movement_change_mean": 0.08669700130820274,
+    "movement_change_std": 0.05370805634325493
+  },
+  "pickup_test": {
+    "pickup_initial_health": 100.0,
+    "pickup_initial_ammo": 50.0,
+    "num_state_predictions": 100
+  },
+  "performance": {
+    "inference_fps": 7.536745484996379,
+    "latency_ms": 132.683265209198,
+    "latency_std_ms": 0.12058773526333431
+  }
+}
