@@ -42,7 +42,7 @@ def main():
     agent_paths = collector.collect_with_agent(
         agent=agent,
         num_trajectories=100,
-        max_trajectory_length=1024,
+        max_length=1024,
         prefix="agent",
     )
     print(f"Collected {len(agent_paths)} agent trajectories")
@@ -51,7 +51,7 @@ def main():
     print("\n=== Collecting random trajectories ===")
     random_paths = collector.collect_random(
         num_trajectories=20,
-        max_trajectory_length=1024,
+        max_length=1024,
     )
     print(f"Collected {len(random_paths)} random trajectories")
 
