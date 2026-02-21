@@ -1,0 +1,9 @@
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+example_paper.*
+test_compile.*
+icml_numpapers.pdf
