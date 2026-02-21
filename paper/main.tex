@@ -183,11 +183,11 @@ Context frames & $N{=}4$ \\
 Actions & 8 discrete, embed dim 128 \\
 Memory tokens & $K{=}16$, dim 768 \\
 Memory update & GRU cell + LayerNorm \\
-State head & 3-layer MLP (768$\to$256$\to$2) \\
+State head & 3-layer MLP (768$\to$256$\to$256$\to$2) \\
 Noise augmentation & $\sigma_{\max}{=}0.7$ \\
 Scheduler & DDIM, 4 inference steps \\
 \midrule
-Trainable parameters & 6.3M \\
+Trainable parameters & 9.8M \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -231,7 +231,7 @@ Standardized scenarios: idle test (standing still, measuring visual drift), move
 
 \subsection{Training Dynamics}
 
-Figure~\ref{fig:training} shows the training curves for MemGameNGen over 10K steps. The diffusion loss converges smoothly from 0.25 to approximately 0.08, indicating the UNet learns to predict noise conditioned on actions and memory. The state loss shows high initial values ($>$6000, reflecting un-normalized health/ammo scales of ${\sim}100$ and ${\sim}50$) and rapidly decreases to near zero, with periodic spikes corresponding to trajectory boundaries where game variables change abruptly.
+Figure~\ref{fig:training} shows the training curves for MemGameNGen over 10K steps. The diffusion loss decreases from 0.25 to a median of 0.085 (mean 0.097) over the final 2500 steps, indicating the UNet learns to predict noise conditioned on actions and memory. The state loss shows high initial values ($>$6000, reflecting un-normalized health/ammo scales of ${\sim}100$ and ${\sim}50$) and rapidly decreases to near zero, with periodic spikes corresponding to trajectory boundaries where game variables change abruptly.
 
 Validation loss stabilizes around 5.0 after 1K steps, with no significant overfitting despite the relatively small dataset. This suggests the LoRA-based adaptation generalizes adequately within the training distribution.
 
@@ -266,7 +266,7 @@ Baseline (no mem.) & 15.83 & 0.518 & ${\sim}$0.002$\times$ \\
 
 \subsection{Autoregressive Evaluation}
 
-Table~\ref{tab:autoregressive} reports PSNR at different autoregressive horizons. The model maintains relatively stable quality across horizons, with PSNR actually slightly increasing at longer horizons. This counterintuitive result occurs because early frames have higher variance (the model is still ``warming up'' from randomly initialized noise), while later frames benefit from accumulated context.
+Table~\ref{tab:autoregressive} and Figure~\ref{fig:psnr_horizon} report PSNR at different autoregressive horizons. The model maintains relatively stable quality across horizons, with PSNR slightly increasing at longer horizons. This counterintuitive result occurs because early frames have higher variance (the model is still ``warming up'' from randomly initialized context), while later frames benefit from accumulated memory state.
 
 \begin{table}[t]
 \caption{Autoregressive PSNR (dB) at different rollout horizons, averaged over 10 trajectories.}
@@ -281,6 +281,13 @@ MemGameNGen & 15.12 & 15.20 & 15.48 & 15.55 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/psnr_horizon.pdf}
+\caption{Autoregressive PSNR across rollout horizons. Quality remains stable over hundreds of frames, with a slight upward trend as memory accumulates context.}
+\label{fig:psnr_horizon}
+\end{figure}
 
 The model generates at \textbf{7.5~FPS} (133~ms per frame) on a single H100 GPU with 4 DDIM steps. This is below real-time (20+ FPS) but comparable to GameNGen's 20~FPS on a dedicated TPU-v5. The latency is dominated by VAE encoding of context frames at each step; caching latents across frames would approximately double throughput.
 
@@ -302,7 +309,14 @@ MemGameNGen & 380.7 & 112.8 & 80.6 & 75.4 \\
 \end{tabular}
 \end{table}
 
-The high error at horizon~10 reflects the initial memory state being uninformative; as the memory accumulates observations, prediction accuracy improves substantially. The error of 75.4 at horizon~200 corresponds to roughly ${\pm}50$ on health (scale 0--100) and ${\pm}25$ on ammo (scale 0--50), indicating the memory captures approximate but imperfect state information. This is a starting point; with more training data and longer sequential training windows, we expect significant improvement.
+The high error at horizon~10 reflects the initial memory state being uninformative; as the memory accumulates observations, prediction accuracy improves substantially (Figure~\ref{fig:state_prediction}). The error of 75.4 at horizon~200 corresponds to roughly ${\pm}50$ on health (scale 0--100) and ${\pm}25$ on ammo (scale 0--50), indicating the memory captures approximate but imperfect state information. This is a starting point; with more training data and longer sequential training windows, we expect significant improvement.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/state_prediction.pdf}
+\caption{State prediction L1 error across autoregressive horizons. Error decreases as the memory module accumulates observations, showing the memory learns to track game state over time.}
+\label{fig:state_prediction}
+\end{figure}
 
 \subsection{Controllability}
 
@@ -340,7 +354,7 @@ FPS & 7.5 \\
 Latency per frame & 132.7 ms \\
 Latency std & 0.12 ms \\
 DDIM steps & 4 \\
-Model size (trainable) & 6.3M params \\
+Model size (trainable) & 9.8M params \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -395,7 +409,7 @@ The PPO agent uses a 3-layer CNN (32, 64, 64 channels with strides 4, 2, 1) foll
 Each trajectory is stored as a compressed NumPy archive (\texttt{.npz}) containing: frames ($T{\times}120{\times}160{\times}3$, uint8), actions ($T$, int64), and game variables (HEALTH and AMMO2, both float32). The dataset contains 120 trajectories of 1024 frames each (${\approx}$1.5~GB compressed).
 
 \paragraph{LoRA configuration.}
-LoRA is applied to the query, key, value, and output projection layers of all cross-attention blocks in the UNet. Rank $r{=}16$ with $\alpha{=}32$ and dropout 0.05. This yields approximately 3.6M trainable parameters in the UNet, plus 2.7M in the memory module, action embeddings, input projection, noise augmentation, state head, and frame encoder.
+LoRA is applied to the query, key, value, and output projection layers of all cross-attention blocks in the UNet. Rank $r{=}16$ with $\alpha{=}32$ and dropout 0.05. This yields 3.2M trainable parameters in the UNet LoRA layers. The memory module contributes 5.0M parameters, and the remaining components (action embeddings 0.7M, noise augmentation 0.6M, state head 0.3M, frame encoder 0.04M) bring the total to 9.8M trainable parameters.
 
 \section{Full Evaluation Results}
 \label{app:eval}
