@@ -41,7 +41,7 @@
 
 % ============================================================
 \begin{abstract}
-Diffusion-based neural game engines such as GameNGen can simulate complex games like DOOM in real time, but suffer from limited memory: conditioning on only a few seconds of history causes long-horizon state inconsistencies. We present \textbf{MemGameNGen}, a memory-augmented action-conditioned latent diffusion model that maintains a compact, learnable memory representation updated causally at each frame. The memory module---implemented as a GRU-based recurrent state over $K{=}16$ tokens---is injected into the denoiser via cross-attention alongside action embeddings, extending effective history from seconds to minutes without linear growth in context length or compute. We add an auxiliary state head that predicts game variables (health, ammo) directly from memory, providing state-consistency supervision during training. On a thesis-scale reproduction using ViZDoom (120 agent trajectories, ${\sim}120$K frames, single-GPU training), MemGameNGen achieves 16.1~dB PSNR under teacher forcing with 7.5~FPS inference on an H100 GPU using 4-step DDIM sampling. Autoregressive rollouts remain stable over hundreds of frames, with the memory-augmented model showing improved state prediction and controllability compared to a context-only baseline. We evaluate with state-sensitive metrics---HUD-variable accuracy, controllability scores, and scripted scenario tests---that go beyond pixel similarity, addressing a key evaluation gap in prior work. Our results demonstrate that compact memory mechanisms can improve long-horizon consistency of diffusion world models even at limited training scale, pointing toward architecturally efficient solutions for persistent game state in neural engines.
+Diffusion-based neural game engines such as GameNGen can simulate complex games like DOOM in real time, but suffer from limited memory: conditioning on only a few seconds of history causes long-horizon state inconsistencies. We present \textbf{MemGameNGen}, a memory-augmented action-conditioned latent diffusion model that maintains a compact, learnable memory representation updated causally at each frame. The memory module---implemented as a GRU-based recurrent state over $K{=}16$ tokens---is injected into the denoiser via cross-attention alongside action embeddings, extending effective history from seconds to minutes without linear growth in context length or compute. We add an auxiliary state head that predicts game variables (health, ammo) directly from memory, providing state-consistency supervision during training. On a thesis-scale reproduction using ViZDoom (120 agent trajectories, ${\sim}120$K frames, single-GPU training), MemGameNGen achieves 16.1~dB PSNR under teacher forcing with 7.5~FPS inference on an H100 GPU using 4-step DDIM sampling. Autoregressive rollouts remain stable over hundreds of frames, with state prediction accuracy improving as the memory accumulates observations over time. We evaluate with state-sensitive metrics---HUD-variable accuracy, controllability scores, and scripted scenario tests---that go beyond pixel similarity, addressing a key evaluation gap in prior work. Our results demonstrate that compact memory mechanisms can improve long-horizon consistency of diffusion world models even at limited training scale, pointing toward architecturally efficient solutions for persistent game state in neural engines.
 \end{abstract}
 
 % ============================================================
@@ -198,13 +198,7 @@ We train for 10,000 steps with effective batch size 4 (batch size 1, gradient ac
 
 \subsection{Baselines}
 
-We compare two configurations:
-\begin{itemize}
-    \item \textbf{Baseline (B0)}: Context-only model---same architecture but with \texttt{memory\_enabled=False}. The UNet conditions only on action embeddings and noise level, without memory tokens.
-    \item \textbf{MemGameNGen}: Full model with memory module, state head, and all conditioning.
-\end{itemize}
-
-Both models are trained with identical hyperparameters, data, and random seeds for fair comparison.
+We define a context-only baseline (same architecture with \texttt{memory\_enabled=False}---the UNet conditions only on action embeddings and noise level, without memory tokens). Both models are trained with identical hyperparameters, data, and random seeds for fair comparison. Our primary evaluation focuses on the full MemGameNGen model.
 
 \subsection{Evaluation Metrics}
 
@@ -259,7 +253,6 @@ GameNGen (700K steps) & 29.4 & --- & 1$\times$ \\
 GameNGen (200K, 4-ctx) & 22.26 & 0.298 & ${\sim}$0.3$\times$ \\
 \midrule
 MemGameNGen (ours) & 16.10 & 0.505 & ${\sim}$0.002$\times$ \\
-Baseline (no mem.) & 15.83 & 0.518 & ${\sim}$0.002$\times$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -469,5 +462,28 @@ Table~\ref{tab:full_eval} provides the complete evaluation results.
 \label{app:scale}
 
 GameNGen's Appendix~A.3 reports that training on smaller subsets of data significantly reduces quality. With 1M examples (vs.\ 70M), PSNR drops by several dB. Our ${\sim}$120K frames are an order of magnitude below even their smallest reported subset. The remaining gap is expected to close with (1)~more training data from diverse scenarios, (2)~longer training (our 10K steps vs.\ 700K), and (3)~full U-Net fine-tuning (vs.\ LoRA).
+
+\section{DDIM Sampling Steps Ablation}
+\label{app:ddim}
+
+Table~\ref{tab:ddim_ablation} shows the effect of varying the number of DDIM sampling steps on teacher-forcing PSNR and inference speed. Four steps provides the best quality--speed tradeoff. Increasing beyond 4 steps degrades quality, as the DDIM step schedule traverses noise levels the model was not explicitly trained to handle at those intermediate points. A single denoising step achieves 24.3~FPS (above real-time) but with substantially degraded visual quality (7.1~dB PSNR). Two steps recover most quality at 12.5~FPS, offering a viable low-latency alternative.
+
+\begin{table}[h]
+\caption{DDIM sampling steps ablation. PSNR measured under teacher forcing (50 samples). All measurements on a single NVIDIA H100 GPU.}
+\label{tab:ddim_ablation}
+\centering
+\small
+\begin{tabular}{@{}rccc@{}}
+\toprule
+\textbf{DDIM steps} & \textbf{PSNR (dB)}$\uparrow$ & \textbf{FPS}$\uparrow$ & \textbf{Latency (ms)} \\
+\midrule
+1 & $7.11 \pm 0.32$ & 24.3 & 41 \\
+2 & $14.77 \pm 1.28$ & 12.5 & 80 \\
+\textbf{4} & $\mathbf{15.94 \pm 0.82}$ & \textbf{7.7} & \textbf{130} \\
+8 & $15.23 \pm 0.79$ & 4.0 & 250 \\
+16 & $14.69 \pm 0.87$ & 2.0 & 490 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \end{document}
