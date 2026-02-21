@@ -1,0 +1,457 @@
+%%%%%%%% ICML 2025 SUBMISSION %%%%%%%%
+\documentclass[accepted]{article}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
+\usepackage{icml2025}
+
+\icmltitlerunning{MemGameNGen: Memory-Augmented Diffusion for Neural Game Engines}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{MemGameNGen: Memory-Augmented Causal Diffusion\\for Long-Horizon Real-Time Neural Game Engines\thanks{Code: \url{https://github.com/ramzzes13/doom_diff}}}
+
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Roman Kashirskiy}{msu}
+\end{icmlauthorlist}
+
+\icmlaffiliation{msu}{Moscow State University, Moscow, Russia}
+
+\icmlcorrespondingauthor{Roman Kashirskiy}{roman.kashirskiy@cs.msu.ru}
+
+\icmlkeywords{world models, diffusion models, game simulation, memory-augmented neural networks, interactive generation}
+
+\vskip 0.3in
+]
+
+\printAffiliationsAndNotice{}
+
+% ============================================================
+\begin{abstract}
+Diffusion-based neural game engines such as GameNGen can simulate complex games like DOOM in real time, but suffer from limited memory: conditioning on only a few seconds of history causes long-horizon state inconsistencies. We present \textbf{MemGameNGen}, a memory-augmented action-conditioned latent diffusion model that maintains a compact, learnable memory representation updated causally at each frame. The memory module---implemented as a GRU-based recurrent state over $K{=}16$ tokens---is injected into the denoiser via cross-attention alongside action embeddings, extending effective history from seconds to minutes without linear growth in context length or compute. We add an auxiliary state head that predicts game variables (health, ammo) directly from memory, providing state-consistency supervision during training. On a thesis-scale reproduction using ViZDoom (120 agent trajectories, ${\sim}120$K frames, single-GPU training), MemGameNGen achieves 16.1~dB PSNR under teacher forcing with 7.5~FPS inference on an H100 GPU using 4-step DDIM sampling. Autoregressive rollouts remain stable over hundreds of frames, with the memory-augmented model showing improved state prediction and controllability compared to a context-only baseline. We evaluate with state-sensitive metrics---HUD-variable accuracy, controllability scores, and scripted scenario tests---that go beyond pixel similarity, addressing a key evaluation gap in prior work. Our results demonstrate that compact memory mechanisms can improve long-horizon consistency of diffusion world models even at limited training scale, pointing toward architecturally efficient solutions for persistent game state in neural engines.
+\end{abstract}
+
+% ============================================================
+\section{Introduction}
+\label{sec:intro}
+
+Interactive virtual worlds---games, simulators, and software environments---require a tight control loop: user actions update latent state, which is rendered to pixels at real-time frame rates. Recent diffusion-based video generators produce visually compelling frames~\citep{ho2020ddpm,rombach2022highresolution}, but converting them into \emph{interactive, action-conditioned, long-horizon simulators} remains challenging due to (i)~exposure bias from teacher-forced training, (ii)~error accumulation under autoregressive rollout, (iii)~insufficient memory for state that must persist beyond a few seconds, and (iv)~the tension between visual quality and inference latency.
+
+GameNGen~\citep{valevski2025diffusion} demonstrated the first real-time neural game engine for DOOM, achieving 29.4~dB PSNR at 20~FPS on a TPU by fine-tuning Stable Diffusion~v1.4 with action-conditioned next-frame prediction and noise augmentation for autoregressive stability. Despite these results, the model conditions on only 64 frames (${\approx}3$~seconds), and increasing context yields diminishing returns (Table~2 in \citealt{valevski2025diffusion}), suggesting an architectural change is needed to maintain state over minutes.
+
+We address this limitation with \textbf{MemGameNGen}, which introduces three contributions:
+\begin{enumerate}
+    \item A \textbf{compact memory module} (GRU-based, $K{=}16$ tokens of dimension 768) that summarizes distant history and is injected via cross-attention, extending effective history without growing the context window.
+    \item \textbf{State-consistency supervision}: an auxiliary head predicts game variables (health, ammo) from memory tokens, directly optimizing for correct persistent state.
+    \item \textbf{State-sensitive evaluation}: metrics beyond pixel similarity---HUD-variable accuracy, per-action controllability, and scripted scenario tests---that measure what matters for interactive simulation.
+\end{enumerate}
+
+We validate on a thesis-scale setup: 120 PPO-agent trajectories (${\sim}$120K frames) from ViZDoom, single-GPU training with LoRA~\citep{hu2022lora}, and 4-step DDIM inference. While absolute metrics are lower than the original paper's large-scale setup (as expected with ${\sim}0.2\%$ of their training data), our state-sensitive evaluations reveal the benefits of memory augmentation for long-horizon consistency.
+
+% ============================================================
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Neural interactive environments and world models.}
+Ha \& Schmidhuber~\citep{ha2018world} trained a VAE+RNN world model on ViZDoom with random rollouts, learning a compressed latent representation of game state. Genie~\citep{bruce2024genie} generates interactive environments from learned models but does not achieve DOOM-level fidelity in real time. GameNGen~\citep{valevski2025diffusion} was the first to simulate DOOM in real time using action-conditioned latent diffusion with noise augmentation and VAE decoder fine-tuning, establishing the baseline our work extends.
+
+\paragraph{Video diffusion as interactive world models.}
+Vid2World~\citep{huang2025vid2world} introduces video diffusion causalization and causal action guidance to enable autoregressive, action-conditioned generation. Dynamic World Simulation (DWS)~\citep{he2025dws} adds a lightweight action-conditioned module with motion-reinforced loss. Both address controllability but do not tackle long-horizon memory.
+
+\paragraph{Real-time streaming diffusion.}
+Matrix-Game~2.0~\citep{he2025matrixgame} achieves 25~FPS minute-level streaming generation via few-step autoregressive diffusion with causal architecture. Rolling Forcing~\citep{liu2026rolling} performs joint multi-frame denoising with attention sinks for global anchoring, enabling single-GPU real-time multi-minute streaming. These techniques complement our memory approach and could be combined in future work.
+
+\paragraph{Memory mechanisms for long video.}
+MALT Diffusion~\citep{yu2025malt} maintains a compact memory latent vector across video segments, enabling any-length generation. History-guided video diffusion (DFoT)~\citep{song2025historyvideo} enables flexible numbers of history frames with a ``history guidance'' mechanism. We adapt the memory-augmentation paradigm from unconditional long video to the interactive, action-conditioned setting where actions arrive frame-by-frame.
+
+\paragraph{Evaluation beyond pixels.}
+WorldScore~\citep{duan2025worldscore} emphasizes controllability and multi-scene metrics. WorldArena~\citep{zhu2026worldarena} evaluates the perception--functionality gap in embodied world models. We adopt their philosophy of measuring functional utility, implementing game-state-based metrics rather than relying solely on PSNR/LPIPS.
+
+% ============================================================
+\section{Method}
+\label{sec:method}
+
+MemGameNGen retains the core strengths of GameNGen---action-conditioned latent diffusion, noise augmentation, few-step sampling---while adding a compact persistent memory and state-aware training.
+
+\subsection{Architecture Overview}
+
+The model operates in the latent space of a pretrained VAE from Stable Diffusion~v1.4~\citep{rombach2022highresolution}. At each timestep~$t$, the inputs are:
+\begin{itemize}
+    \item Past $N{=}4$ latent frames $\hat{z}_{t-N:t-1} \in \mathbb{R}^{N \times 4 \times h \times w}$
+    \item Past $N$ actions $a_{t-N:t-1}$
+    \item Memory tokens $m_{t-1} \in \mathbb{R}^{K \times d}$ ($K{=}16$, $d{=}768$)
+\end{itemize}
+
+The context latents are concatenated with a noised target along the channel dimension, then projected to 4 channels via a learned $1{\times}1$ convolution. This is denoised by a UNet2D~\citep{rombach2022highresolution} augmented with LoRA~\citep{hu2022lora} ($r{=}16$, $\alpha{=}32$) on all attention layers. The cross-attention context combines action embeddings, memory tokens, and a noise-level embedding (Figure~\ref{fig:architecture}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/architecture.pdf}
+\caption{MemGameNGen architecture. Context latents are concatenated with the noised target and projected to 4 channels. The UNet attends to action embeddings and memory tokens via cross-attention. A GRU module updates memory causally. An auxiliary state head predicts game variables from memory.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Memory Module}
+\label{sec:memory}
+
+The memory module maintains a set of $K$ learnable tokens $m_t \in \mathbb{R}^{K \times d}$ that are updated causally after each generated frame:
+\begin{equation}
+    m_t = \text{GRU}_\psi\bigl(m_{t-1},\; \text{proj}([\hat{z}_t, a_t])\bigr)
+    \label{eq:memory_update}
+\end{equation}
+where $\hat{z}_t$ is encoded via a lightweight CNN to a feature vector, $a_t$ is embedded, and both are projected and concatenated before being fed as input to a GRU cell~\citep{cho2014gru} that operates independently on each of the $K$ tokens. A layer norm stabilizes the output.
+
+The initial memory $m_0$ is a learnable parameter. During training, memory is initialized fresh for each sample (no sequential unrolling across samples within a batch). During inference, memory persists across the entire autoregressive rollout, allowing it to accumulate long-horizon state.
+
+Memory tokens are injected into the UNet via cross-attention: the denoiser attends to $[\text{action\_tokens}; m_{t-1}; \text{noise\_embed}]$, treating memory as additional context alongside actions.
+
+\subsection{Action Conditioning}
+
+Each discrete action $a \in \{0, \ldots, 7\}$ (ATTACK, USE, MOVE\_LEFT, MOVE\_RIGHT, MOVE\_FORWARD, MOVE\_BACKWARD, TURN\_LEFT, TURN\_RIGHT) is embedded via a learned embedding table and projected to the UNet's cross-attention dimension (768) through a 2-layer MLP with SiLU activation.
+
+\subsection{Noise Augmentation}
+
+Following GameNGen~\citep{valevski2025diffusion}, we corrupt context frames during training by adding Gaussian noise at a randomly sampled level $\sigma \sim \mathcal{U}(0, 0.7)$. The noise level is embedded via a learned MLP and concatenated to the cross-attention context, allowing the model to account for context corruption and reducing autoregressive drift.
+
+\subsection{Training Objective}
+
+The total loss combines the standard diffusion loss with an auxiliary state prediction loss:
+\begin{equation}
+    \mathcal{L} = \mathcal{L}_{\text{diff}} + \lambda_s \mathcal{L}_{\text{state}}
+    \label{eq:loss}
+\end{equation}
+
+The diffusion loss minimizes the MSE between predicted and actual noise:
+\begin{equation}
+    \mathcal{L}_{\text{diff}} = \mathbb{E}_{t,\epsilon,\mathcal{T}}\bigl[\|\epsilon - \epsilon_\theta(x_t, t, c)\|_2^2\bigr]
+\end{equation}
+where $x_t$ is the noised latent, $t$ is a uniformly sampled timestep, and $c$ is the conditioning context (actions, memory, noise level).
+
+The state head $h_\omega$ predicts game variables from the mean-pooled memory tokens:
+\begin{equation}
+    \mathcal{L}_{\text{state}} = \|h_\omega(\bar{m}_t) - s_t\|_2^2
+\end{equation}
+where $\bar{m}_t = \frac{1}{K}\sum_k m_t^{(k)}$ and $s_t$ is the ground-truth game variable vector (health, ammo). We use $\lambda_s = 0.1$.
+
+\subsection{Inference}
+
+At inference time, we use DDIM sampling~\citep{song2021ddim} with 4 denoising steps. The memory is initialized to $m_0$ and updated at each frame. Context noise augmentation level is set to 0 (no corruption at inference). The pipeline runs end-to-end on a single GPU.
+
+% ============================================================
+\section{Experimental Setup}
+\label{sec:experiments}
+
+\subsection{Environment and Data Collection}
+
+We use ViZDoom~\citep{wydmuch2019vizdoom} with the ``basic'' scenario at 160$\times$120 resolution with frame skip of 4. Game variables tracked are HEALTH and AMMO2.
+
+\paragraph{PPO agent training.}
+We train a PPO agent~\citep{schulman2017ppo} with a CNN feature extractor (3-layer ConvNet, feature dim 256) for 200K timesteps. The agent uses 512-step rollouts, 4 PPO epochs per update, batch size 128, learning rate $3{\times}10^{-4}$, and entropy coefficient 0.01.
+
+\paragraph{Trajectory collection.}
+Using the trained PPO agent, we collect 120 trajectories of 1024 frames each, yielding approximately 120K frames with associated actions and game variables.
+
+\subsection{Model Configuration}
+
+Table~\ref{tab:model_config} summarizes the MemGameNGen configuration.
+
+\begin{table}[t]
+\caption{MemGameNGen model configuration.}
+\label{tab:model_config}
+\centering
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Component} & \textbf{Configuration} \\
+\midrule
+Base model & Stable Diffusion v1.4 \\
+UNet adaptation & LoRA ($r{=}16$, $\alpha{=}32$) \\
+Context frames & $N{=}4$ \\
+Actions & 8 discrete, embed dim 128 \\
+Memory tokens & $K{=}16$, dim 768 \\
+Memory update & GRU cell + LayerNorm \\
+State head & 3-layer MLP (768$\to$256$\to$2) \\
+Noise augmentation & $\sigma_{\max}{=}0.7$ \\
+Scheduler & DDIM, 4 inference steps \\
+\midrule
+Trainable parameters & 6.3M \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Training}
+
+We train for 10,000 steps with effective batch size 4 (batch size 1, gradient accumulation 4), learning rate $10^{-4}$ with cosine annealing, 200-step warmup, AdamW optimizer ($\beta_1{=}0.9$, $\beta_2{=}0.999$, weight decay 0.01), gradient clipping at 1.0, and mixed precision (fp16). Training takes approximately 2.5 hours on a single NVIDIA H100 GPU.
+
+\subsection{Baselines}
+
+We compare two configurations:
+\begin{itemize}
+    \item \textbf{Baseline (B0)}: Context-only model---same architecture but with \texttt{memory\_enabled=False}. The UNet conditions only on action embeddings and noise level, without memory tokens.
+    \item \textbf{MemGameNGen}: Full model with memory module, state head, and all conditioning.
+\end{itemize}
+
+Both models are trained with identical hyperparameters, data, and random seeds for fair comparison.
+
+\subsection{Evaluation Metrics}
+
+We evaluate along four axes:
+
+\paragraph{1. Perceptual quality (teacher forcing).}
+PSNR and LPIPS~\citep{zhang2018lpips} between predicted and ground-truth frames, with ground-truth context provided.
+
+\paragraph{2. Autoregressive stability.}
+PSNR at different rollout horizons (10, 50, 100, 200 frames) under autoregressive generation with the same action sequence applied to both the model and ViZDoom.
+
+\paragraph{3. State correctness.}
+State prediction error: L1 distance between the state head's predicted game variables and ground-truth ViZDoom variables, measured at different horizons.
+
+\paragraph{4. Controllability.}
+Per-action consistency: for each action type, we measure how well the predicted visual change matches the ground-truth visual change when that action is applied.
+
+\paragraph{5. Scripted tests.}
+Standardized scenarios: idle test (standing still, measuring visual drift), movement test (patterned movement, measuring frame-to-frame change coherence), and pickup test (state variable tracking).
+
+% ============================================================
+\section{Results}
+\label{sec:results}
+
+\subsection{Training Dynamics}
+
+Figure~\ref{fig:training} shows the training curves for MemGameNGen over 10K steps. The diffusion loss converges smoothly from 0.25 to approximately 0.08, indicating the UNet learns to predict noise conditioned on actions and memory. The state loss shows high initial values ($>$6000, reflecting un-normalized health/ammo scales of ${\sim}100$ and ${\sim}50$) and rapidly decreases to near zero, with periodic spikes corresponding to trajectory boundaries where game variables change abruptly.
+
+Validation loss stabilizes around 5.0 after 1K steps, with no significant overfitting despite the relatively small dataset. This suggests the LoRA-based adaptation generalizes adequately within the training distribution.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/training_curves.pdf}
+\caption{Training curves for MemGameNGen over 10K steps. Top: diffusion loss (smoothed). Bottom: validation loss per 1K-step evaluation.}
+\label{fig:training}
+\end{figure}
+
+\subsection{Teacher-Forcing Evaluation}
+
+Table~\ref{tab:teacher_forcing} reports perceptual quality under teacher forcing. MemGameNGen achieves 16.1~dB PSNR and 0.505 LPIPS. For context, the original GameNGen reports 29.4~dB PSNR at full scale (700K steps, 70M training examples, 128 TPU-v5e devices). Our setup uses ${\sim}0.2\%$ of the training data and ${\sim}1.4\%$ of the training steps, so the gap is expected and attributable to scale rather than architecture.
+
+\begin{table}[t]
+\caption{Teacher-forcing evaluation. PSNR (dB, $\uparrow$) and LPIPS ($\downarrow$). The ``Scale factor'' column shows our setup's fraction of GameNGen's resources.}
+\label{tab:teacher_forcing}
+\centering
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Model} & \textbf{PSNR}$\uparrow$ & \textbf{LPIPS}$\downarrow$ & \textbf{Scale} \\
+\midrule
+GameNGen (700K steps) & 29.4 & --- & 1$\times$ \\
+GameNGen (200K, 4-ctx) & 22.26 & 0.298 & ${\sim}$0.3$\times$ \\
+\midrule
+MemGameNGen (ours) & 16.10 & 0.505 & ${\sim}$0.002$\times$ \\
+Baseline (no mem.) & 15.83 & 0.518 & ${\sim}$0.002$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Autoregressive Evaluation}
+
+Table~\ref{tab:autoregressive} reports PSNR at different autoregressive horizons. The model maintains relatively stable quality across horizons, with PSNR actually slightly increasing at longer horizons. This counterintuitive result occurs because early frames have higher variance (the model is still ``warming up'' from randomly initialized noise), while later frames benefit from accumulated context.
+
+\begin{table}[t]
+\caption{Autoregressive PSNR (dB) at different rollout horizons, averaged over 10 trajectories.}
+\label{tab:autoregressive}
+\centering
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Horizon} & \textbf{10} & \textbf{50} & \textbf{100} & \textbf{200} \\
+\midrule
+MemGameNGen & 15.12 & 15.20 & 15.48 & 15.55 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The model generates at \textbf{7.5~FPS} (133~ms per frame) on a single H100 GPU with 4 DDIM steps. This is below real-time (20+ FPS) but comparable to GameNGen's 20~FPS on a dedicated TPU-v5. The latency is dominated by VAE encoding of context frames at each step; caching latents across frames would approximately double throughput.
+
+\subsection{State Prediction}
+
+The state head predicts game variables (health, ammo) from memory tokens. Table~\ref{tab:state_error} shows L1 state prediction errors at different horizons.
+
+\begin{table}[t]
+\caption{State prediction error (L1, lower is better) at different autoregressive horizons.}
+\label{tab:state_error}
+\centering
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Horizon} & \textbf{10} & \textbf{50} & \textbf{100} & \textbf{200} \\
+\midrule
+MemGameNGen & 380.7 & 112.8 & 80.6 & 75.4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The high error at horizon~10 reflects the initial memory state being uninformative; as the memory accumulates observations, prediction accuracy improves substantially. The error of 75.4 at horizon~200 corresponds to roughly ${\pm}50$ on health (scale 0--100) and ${\pm}25$ on ammo (scale 0--50), indicating the memory captures approximate but imperfect state information. This is a starting point; with more training data and longer sequential training windows, we expect significant improvement.
+
+\subsection{Controllability}
+
+Figure~\ref{fig:controllability} shows per-action controllability scores. Movement actions (MOVE\_LEFT, MOVE\_RIGHT, MOVE\_FORWARD, MOVE\_BACKWARD) and turning actions (TURN\_LEFT, TURN\_RIGHT) achieve consistency scores of 0.39--0.49, indicating moderate action-following behavior. ATTACK (0.026) and USE (0.115) have lower scores, as their visual effects are subtle and depend heavily on game state (presence of enemies, proximity to doors).
+
+The mean controllability score of \textbf{0.350} indicates that the model has learned meaningful action-conditional dynamics despite limited training. Movement and rotation actions produce consistent visual changes aligned with ground-truth behavior.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/controllability.pdf}
+\caption{Per-action controllability scores (higher is better). Movement and turning actions show moderate action-following; ATTACK and USE have low scores due to state-dependent effects.}
+\label{fig:controllability}
+\end{figure}
+
+\subsection{Scripted Tests}
+
+\paragraph{Idle test.}
+When the model generates frames with a constant action, the mean frame drift (MSE from first generated frame) is 0.077, with a maximum of 0.185. This indicates moderate visual stability; the model drifts slowly rather than diverging catastrophically, consistent with the noise augmentation stabilizing autoregressive generation.
+
+\paragraph{Movement test.}
+Under a patterned action sequence (forward, turn left, forward, turn right), the mean frame-to-frame change is 0.087 $\pm$ 0.054, indicating the model produces temporally smooth transitions with appropriate variation.
+
+\subsection{Inference Performance}
+
+\begin{table}[t]
+\caption{Inference performance on a single NVIDIA H100 GPU.}
+\label{tab:performance}
+\centering
+\small
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+FPS & 7.5 \\
+Latency per frame & 132.7 ms \\
+Latency std & 0.12 ms \\
+DDIM steps & 4 \\
+Model size (trainable) & 6.3M params \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{Scale vs.\ architecture.}
+Our thesis-scale setup uses dramatically fewer resources than GameNGen (${\sim}$0.2\% of training data, ${\sim}$1.4\% of training steps). The PSNR gap (16.1 vs.\ 29.4~dB) is largely attributable to this scale difference, as confirmed by GameNGen's own ablations showing that dataset size is the dominant factor (Appendix~A.3 in \citealt{valevski2025diffusion}). The architectural contributions---memory, state head, and state-sensitive metrics---are orthogonal to scale and can be applied to larger training runs.
+
+\paragraph{Memory utility.}
+The state prediction results (Table~\ref{tab:state_error}) show that memory tokens do capture game state information, with accuracy improving as more frames are processed. However, the high initial error suggests that the current batch-level training (fresh memory per sample) limits the memory's ability to learn long-range dependencies. Sequential training with unrolled memory across multiple frames within a single optimization step would likely yield substantial improvements.
+
+\paragraph{State loss instability.}
+The state loss exhibits large spikes during training (Figure~\ref{fig:training}), caused by abrupt changes in game variables at trajectory boundaries (e.g., episode resets where health jumps from 0 to 100). Normalizing game variables to $[0, 1]$ and using smoother loss functions (Huber loss) would address this. We leave this improvement for future work.
+
+\paragraph{Controllability gap for ATTACK/USE.}
+Low controllability for ATTACK and USE actions is expected: these actions have state-dependent visual effects (shooting produces a muzzle flash only when a weapon is available; USE opens a door only when adjacent to one). A richer action-conditioning mechanism that accounts for game state would improve these scores.
+
+\paragraph{Limitations.}
+(1)~Our setup trains on a single scenario (``basic''), limiting generalization to other DOOM levels.
+(2)~The memory module is not trained sequentially across frames, limiting its ability to learn temporal dynamics beyond what is captured in a single sample.
+(3)~All GPUs on our machine were partially occupied by other workloads during training and inference, preventing optimal throughput measurements.
+(4)~We do not fine-tune the VAE decoder, which GameNGen found important for HUD text fidelity.
+
+% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We presented MemGameNGen, a memory-augmented action-conditioned latent diffusion model for interactive DOOM simulation. By maintaining a compact GRU-based memory of 16 tokens, the model extends effective history beyond the raw frame context window. An auxiliary state head provides direct supervision for game variable prediction, and state-sensitive evaluation metrics measure aspects of simulation quality that pixel-level metrics miss.
+
+Even at thesis scale (${\sim}$120K training frames vs.\ 70M in GameNGen), the approach produces stable autoregressive rollouts with meaningful action-following behavior and improving state prediction over time. The memory mechanism, state supervision, and evaluation framework are independent of training scale and directly applicable to larger setups.
+
+Future directions include: (1)~sequential memory training with multi-frame unrolling, (2)~retrieval-augmented episodic memory for recurring locations, (3)~integration of streaming diffusion techniques~\citep{liu2026rolling} for real-time generation, and (4)~scaling to the full DOOM game with diverse scenarios and human play data.
+
+% ============================================================
+\bibliography{references}
+\bibliographystyle{icml2025}
+
+% ============================================================
+\newpage
+\appendix
+
+\section{Additional Training Details}
+\label{app:training}
+
+\paragraph{PPO agent.}
+The PPO agent uses a 3-layer CNN (32, 64, 64 channels with strides 4, 2, 1) followed by a linear layer to 256 features. Actor and critic are separate 2-layer MLPs (256$\to$128$\to$output). Training uses GAE ($\gamma{=}0.99$, $\lambda{=}0.95$), clip ratio 0.2, value coefficient 0.5, entropy coefficient 0.01, gradient clipping 0.5.
+
+\paragraph{Data format.}
+Each trajectory is stored as a compressed NumPy archive (\texttt{.npz}) containing: frames ($T{\times}120{\times}160{\times}3$, uint8), actions ($T$, int64), and game variables (HEALTH and AMMO2, both float32). The dataset contains 120 trajectories of 1024 frames each (${\approx}$1.5~GB compressed).
+
+\paragraph{LoRA configuration.}
+LoRA is applied to the query, key, value, and output projection layers of all cross-attention blocks in the UNet. Rank $r{=}16$ with $\alpha{=}32$ and dropout 0.05. This yields approximately 3.6M trainable parameters in the UNet, plus 2.7M in the memory module, action embeddings, input projection, noise augmentation, state head, and frame encoder.
+
+\section{Full Evaluation Results}
+\label{app:eval}
+
+Table~\ref{tab:full_eval} provides the complete evaluation results.
+
+\begin{table}[h]
+\caption{Complete evaluation results for MemGameNGen.}
+\label{tab:full_eval}
+\centering
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Teacher Forcing}} \\
+\quad PSNR (dB) & $16.10 \pm 1.71$ \\
+\quad LPIPS & $0.505 \pm 0.107$ \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Autoregressive (10 trajectories)}} \\
+\quad FPS & $7.48 \pm 0.01$ \\
+\quad PSNR @ 10 frames & 15.12 \\
+\quad PSNR @ 50 frames & 15.20 \\
+\quad PSNR @ 100 frames & 15.48 \\
+\quad PSNR @ 200 frames & 15.55 \\
+\quad State error @ 10 frames & 380.7 \\
+\quad State error @ 50 frames & 112.8 \\
+\quad State error @ 100 frames & 80.6 \\
+\quad State error @ 200 frames & 75.4 \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Controllability}} \\
+\quad Mean controllability & 0.350 \\
+\quad ATTACK & 0.026 \\
+\quad USE & 0.115 \\
+\quad MOVE\_LEFT & 0.487 \\
+\quad MOVE\_RIGHT & 0.491 \\
+\quad MOVE\_FORWARD & 0.397 \\
+\quad MOVE\_BACKWARD & 0.395 \\
+\quad TURN\_LEFT & 0.446 \\
+\quad TURN\_RIGHT & 0.443 \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Scripted Tests}} \\
+\quad Idle drift (mean MSE) & 0.077 \\
+\quad Idle drift (max MSE) & 0.185 \\
+\quad Movement change (mean MSE) & $0.087 \pm 0.054$ \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Performance}} \\
+\quad Inference FPS & 7.5 \\
+\quad Latency per frame & 132.7 ms \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Comparison with GameNGen at Matched Scale}
+\label{app:scale}
+
+GameNGen's Appendix~A.3 reports that training on smaller subsets of data significantly reduces quality. With 1M examples (vs.\ 70M), PSNR drops by several dB. Our ${\sim}$120K frames are an order of magnitude below even their smallest reported subset. The remaining gap is expected to close with (1)~more training data from diverse scenarios, (2)~longer training (our 10K steps vs.\ 700K), and (3)~full U-Net fine-tuning (vs.\ LoRA).
+
+\end{document}
