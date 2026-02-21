@@ -1,0 +1,1254 @@
+{
+  "train_losses": [
+    {
+      "step": 50,
+      "total_loss": 609.8051605224609,
+      "diffusion_loss": 0.2505313217989169,
+      "state_loss": 6095.5462646484375
+    },
+    {
+      "step": 100,
+      "total_loss": 595.4520263671875,
+      "diffusion_loss": 0.13479602988809347,
+      "state_loss": 5953.171875
+    },
+    {
+      "step": 150,
+      "total_loss": 619.9923706054688,
+      "diffusion_loss": 0.08104260405525565,
+      "state_loss": 6199.1129150390625
+    },
+    {
+      "step": 200,
+      "total_loss": 602.7381896972656,
+      "diffusion_loss": 0.23947633244097233,
+      "state_loss": 6024.9873046875
+    },
+    {
+      "step": 250,
+      "total_loss": 537.5563278198242,
+      "diffusion_loss": 0.2575788898393512,
+      "state_loss": 5372.9873046875
+    },
+    {
+      "step": 300,
+      "total_loss": 444.2979049682617,
+      "diffusion_loss": 0.10829829366412014,
+      "state_loss": 4441.89599609375
+    },
+    {
+      "step": 350,
+      "total_loss": 278.91905975341797,
+      "diffusion_loss": 0.12178810010664165,
+      "state_loss": 2787.97265625
+    },
+    {
+      "step": 400,
+      "total_loss": 149.21016693115234,
+      "diffusion_loss": 0.10030299110803753,
+      "state_loss": 1491.0986328125
+    },
+    {
+      "step": 450,
+      "total_loss": 33.206748485565186,
+      "diffusion_loss": 0.06919948378344998,
+      "state_loss": 331.37548828125
+    },
+    {
+      "step": 500,
+      "total_loss": 0.736338809132576,
+      "diffusion_loss": 0.1696884207194671,
+      "state_loss": 5.66650390625
+    },
+    {
+      "step": 550,
+      "total_loss": 4.239751252578571,
+      "diffusion_loss": 0.07856924808584154,
+      "state_loss": 41.61181640625
+    },
+    {
+      "step": 600,
+      "total_loss": 16.539948446676135,
+      "diffusion_loss": 0.15122720040380955,
+      "state_loss": 163.88720703125
+    },
+    {
+      "step": 650,
+      "total_loss": 0.060467267874628305,
+      "diffusion_loss": 0.04445164173375815,
+      "state_loss": 0.16015625
+    },
+    {
+      "step": 700,
+      "total_loss": 26.96157681569457,
+      "diffusion_loss": 0.043998284032568336,
+      "state_loss": 269.17578125
+    },
+    {
+      "step": 750,
+      "total_loss": 1.945848934352398,
+      "diffusion_loss": 0.280175075517036,
+      "state_loss": 16.65673828125
+    },
+    {
+      "step": 800,
+      "total_loss": 2.751904943725094,
+      "diffusion_loss": 0.007959515147376806,
+      "state_loss": 27.439453125
+    },
+    {
+      "step": 850,
+      "total_loss": 0.07127214386127889,
+      "diffusion_loss": 0.03567643844871782,
+      "state_loss": 0.35595703125
+    },
+    {
+      "step": 900,
+      "total_loss": 0.10162304900586605,
+      "diffusion_loss": 0.031115236051846296,
+      "state_loss": 0.705078125
+    },
+    {
+      "step": 950,
+      "total_loss": 19.935249960049987,
+      "diffusion_loss": 0.11313026770949364,
+      "state_loss": 198.22119140625
+    },
+    {
+      "step": 1000,
+      "total_loss": 0.23824588605202734,
+      "diffusion_loss": 0.19508181812125258,
+      "state_loss": 0.431640625
+    },
+    {
+      "step": 1050,
+      "total_loss": 4.8413683460094035,
+      "diffusion_loss": 0.10523539496352896,
+      "state_loss": 47.361328125
+    },
+    {
+      "step": 1100,
+      "total_loss": 0.14353422075510025,
+      "diffusion_loss": 0.0521279675886035,
+      "state_loss": 0.9140625
+    },
+    {
+      "step": 1150,
+      "total_loss": 0.12394471280276775,
+      "diffusion_loss": 0.10319276247173548,
+      "state_loss": 0.20751953125
+    },
+    {
+      "step": 1200,
+      "total_loss": 4.284193872474134,
+      "diffusion_loss": 0.12149861350189894,
+      "state_loss": 41.626953125
+    },
+    {
+      "step": 1250,
+      "total_loss": 0.1929815448820591,
+      "diffusion_loss": 0.12437802931526676,
+      "state_loss": 0.68603515625
+    },
+    {
+      "step": 1300,
+      "total_loss": 0.14696318469941616,
+      "diffusion_loss": 0.07020536996424198,
+      "state_loss": 0.767578125
+    },
+    {
+      "step": 1350,
+      "total_loss": 0.6574974008835852,
+      "diffusion_loss": 0.06023175080190413,
+      "state_loss": 5.97265625
+    },
+    {
+      "step": 1400,
+      "total_loss": 0.09473881660960615,
+      "diffusion_loss": 0.05567631660960615,
+      "state_loss": 0.390625
+    },
+    {
+      "step": 1450,
+      "total_loss": 10.71859099343419,
+      "diffusion_loss": 0.09593509882688522,
+      "state_loss": 106.2265625
+    },
+    {
+      "step": 1500,
+      "total_loss": 0.0889261313714087,
+      "diffusion_loss": 0.051230814191512764,
+      "state_loss": 0.376953125
+    },
+    {
+      "step": 1550,
+      "total_loss": 0.09808331145904958,
+      "diffusion_loss": 0.07772197900339961,
+      "state_loss": 0.20361328125
+    },
+    {
+      "step": 1600,
+      "total_loss": 38.242110293358564,
+      "diffusion_loss": 0.17081985948607326,
+      "state_loss": 380.712890625
+    },
+    {
+      "step": 1650,
+      "total_loss": 0.4204002940095961,
+      "diffusion_loss": 0.11688465776387602,
+      "state_loss": 3.03515625
+    },
+    {
+      "step": 1700,
+      "total_loss": 0.1976688876748085,
+      "diffusion_loss": 0.09390912603703327,
+      "state_loss": 1.03759765625
+    },
+    {
+      "step": 1750,
+      "total_loss": 5.687566466629505,
+      "diffusion_loss": 0.12189254350960255,
+      "state_loss": 55.65673828125
+    },
+    {
+      "step": 1800,
+      "total_loss": 0.21849998831748962,
+      "diffusion_loss": 0.12958396726753563,
+      "state_loss": 0.88916015625
+    },
+    {
+      "step": 1850,
+      "total_loss": 30.99443049891852,
+      "diffusion_loss": 0.08891339140245691,
+      "state_loss": 309.05517578125
+    },
+    {
+      "step": 1900,
+      "total_loss": 0.22982320562005043,
+      "diffusion_loss": 0.10287007433362305,
+      "state_loss": 1.26953125
+    },
+    {
+      "step": 1950,
+      "total_loss": 11.404183769598603,
+      "diffusion_loss": 0.092416325584054,
+      "state_loss": 113.11767578125
+    },
+    {
+      "step": 2000,
+      "total_loss": 28.829503033310175,
+      "diffusion_loss": 0.06368294981075451,
+      "state_loss": 287.658203125
+    },
+    {
+      "step": 2050,
+      "total_loss": 0.12068408727645874,
+      "diffusion_loss": 0.07224658667109907,
+      "state_loss": 0.484375
+    },
+    {
+      "step": 2100,
+      "total_loss": 0.30238390527665615,
+      "diffusion_loss": 0.22093859291635454,
+      "state_loss": 0.814453125
+    },
+    {
+      "step": 2150,
+      "total_loss": 0.09805091191083193,
+      "diffusion_loss": 0.0697305997600779,
+      "state_loss": 0.283203125
+    },
+    {
+      "step": 2200,
+      "total_loss": 0.7996085770428181,
+      "diffusion_loss": 0.052342981565743685,
+      "state_loss": 7.47265625
+    },
+    {
+      "step": 2250,
+      "total_loss": 0.3953569419682026,
+      "diffusion_loss": 0.3388628028333187,
+      "state_loss": 0.56494140625
+    },
+    {
+      "step": 2300,
+      "total_loss": 0.1125972755253315,
+      "diffusion_loss": 0.06196251048822887,
+      "state_loss": 0.50634765625
+    },
+    {
+      "step": 2350,
+      "total_loss": 0.10691803134977818,
+      "diffusion_loss": 0.06844147163792513,
+      "state_loss": 0.384765625
+    },
+    {
+      "step": 2400,
+      "total_loss": 3.8649224089458585,
+      "diffusion_loss": 0.05203163414262235,
+      "state_loss": 38.12890625
+    },
+    {
+      "step": 2450,
+      "total_loss": 0.10510662384331226,
+      "diffusion_loss": 0.08694255910813808,
+      "state_loss": 0.181640625
+    },
+    {
+      "step": 2500,
+      "total_loss": 5.0866695661097765,
+      "diffusion_loss": 0.09897426282986999,
+      "state_loss": 49.876953125
+    },
+    {
+      "step": 2550,
+      "total_loss": 0.1420401108916849,
+      "diffusion_loss": 0.13227448577526957,
+      "state_loss": 0.09765625
+    },
+    {
+      "step": 2600,
+      "total_loss": 0.1571782287210226,
+      "diffusion_loss": 0.08857471641385928,
+      "state_loss": 0.68603515625
+    },
+    {
+      "step": 2650,
+      "total_loss": 0.18557150848209858,
+      "diffusion_loss": 0.0529054886137601,
+      "state_loss": 1.32666015625
+    },
+    {
+      "step": 2700,
+      "total_loss": 0.13018832355737686,
+      "diffusion_loss": 0.08878207369707525,
+      "state_loss": 0.4140625
+    },
+    {
+      "step": 2750,
+      "total_loss": 0.21392973512411118,
+      "diffusion_loss": 0.1658340273424983,
+      "state_loss": 0.48095703125
+    },
+    {
+      "step": 2800,
+      "total_loss": 1.2329850168898702,
+      "diffusion_loss": 0.13044590965728275,
+      "state_loss": 11.025390625
+    },
+    {
+      "step": 2850,
+      "total_loss": 0.08218418713659048,
+      "diffusion_loss": 0.0634341865661554,
+      "state_loss": 0.1875
+    },
+    {
+      "step": 2900,
+      "total_loss": 15.390048746485263,
+      "diffusion_loss": 0.09903284860774875,
+      "state_loss": 152.91015625
+    },
+    {
+      "step": 2950,
+      "total_loss": 0.13891801983118057,
+      "diffusion_loss": 0.07304888032376766,
+      "state_loss": 0.65869140625
+    },
+    {
+      "step": 3000,
+      "total_loss": 0.16149658244103193,
+      "diffusion_loss": 0.1448950176127255,
+      "state_loss": 0.166015625
+    },
+    {
+      "step": 3050,
+      "total_loss": 0.25115942396223545,
+      "diffusion_loss": 0.05975317908450961,
+      "state_loss": 1.9140625
+    },
+    {
+      "step": 3100,
+      "total_loss": 0.10403254814445972,
+      "diffusion_loss": 0.0470012983714696,
+      "state_loss": 0.5703125
+    },
+    {
+      "step": 3150,
+      "total_loss": 0.18573172762989998,
+      "diffusion_loss": 0.09525320504326373,
+      "state_loss": 0.90478515625
+    },
+    {
+      "step": 3200,
+      "total_loss": 0.1015758803114295,
+      "diffusion_loss": 0.054456739337183535,
+      "state_loss": 0.47119140625
+    },
+    {
+      "step": 3250,
+      "total_loss": 0.03477020049467683,
+      "diffusion_loss": 0.02202605950878933,
+      "state_loss": 0.12744140625
+    },
+    {
+      "step": 3300,
+      "total_loss": 12.726131806150079,
+      "diffusion_loss": 0.06280231475830078,
+      "state_loss": 126.63330078125
+    },
+    {
+      "step": 3350,
+      "total_loss": 0.3902927041053772,
+      "diffusion_loss": 0.0789645619224757,
+      "state_loss": 3.11328125
+    },
+    {
+      "step": 3400,
+      "total_loss": 0.06484655244275928,
+      "diffusion_loss": 0.03159459674498066,
+      "state_loss": 0.33251953125
+    },
+    {
+      "step": 3450,
+      "total_loss": 9.089055594464298,
+      "diffusion_loss": 0.07201493298634887,
+      "state_loss": 90.17041015625
+    },
+    {
+      "step": 3500,
+      "total_loss": 1.825658656656742,
+      "diffusion_loss": 0.021557064959779382,
+      "state_loss": 18.041015625
+    },
+    {
+      "step": 3550,
+      "total_loss": 0.16545679047703743,
+      "diffusion_loss": 0.15198023174889386,
+      "state_loss": 0.134765625
+    },
+    {
+      "step": 3600,
+      "total_loss": 27.847443860955536,
+      "diffusion_loss": 0.0950521829072386,
+      "state_loss": 277.52392578125
+    },
+    {
+      "step": 3650,
+      "total_loss": 0.10918083414435387,
+      "diffusion_loss": 0.06757926964201033,
+      "state_loss": 0.416015625
+    },
+    {
+      "step": 3700,
+      "total_loss": 18.356627559289336,
+      "diffusion_loss": 0.17772210575640202,
+      "state_loss": 181.7890625
+    },
+    {
+      "step": 3750,
+      "total_loss": 0.15268396586179733,
+      "diffusion_loss": 0.09951013303361833,
+      "state_loss": 0.53173828125
+    },
+    {
+      "step": 3800,
+      "total_loss": 0.11262194626033306,
+      "diffusion_loss": 0.023901241860585287,
+      "state_loss": 0.88720703125
+    },
+    {
+      "step": 3850,
+      "total_loss": 2.794168098946102,
+      "diffusion_loss": 0.02502753073349595,
+      "state_loss": 27.69140625
+    },
+    {
+      "step": 3900,
+      "total_loss": 0.20152524020522833,
+      "diffusion_loss": 0.07886899172444828,
+      "state_loss": 1.2265625
+    },
+    {
+      "step": 3950,
+      "total_loss": 0.17928029410541058,
+      "diffusion_loss": 0.07420217024628073,
+      "state_loss": 1.05078125
+    },
+    {
+      "step": 4000,
+      "total_loss": 0.1005891403183341,
+      "diffusion_loss": 0.04980788822285831,
+      "state_loss": 0.5078125
+    },
+    {
+      "step": 4050,
+      "total_loss": 0.22021082043647766,
+      "diffusion_loss": 0.1559041793225333,
+      "state_loss": 0.64306640625
+    },
+    {
+      "step": 4100,
+      "total_loss": 0.07044296432286501,
+      "diffusion_loss": 0.05325546633685008,
+      "state_loss": 0.171875
+    },
+    {
+      "step": 4150,
+      "total_loss": 0.08260888885706663,
+      "diffusion_loss": 0.03568506290321238,
+      "state_loss": 0.46923828125
+    },
+    {
+      "step": 4200,
+      "total_loss": 0.5094632487744093,
+      "diffusion_loss": 0.06493199174292386,
+      "state_loss": 4.4453125
+    },
+    {
+      "step": 4250,
+      "total_loss": 4.7959346091374755,
+      "diffusion_loss": 0.05355156818404794,
+      "state_loss": 47.423828125
+    },
+    {
+      "step": 4300,
+      "total_loss": 4.03849767614156,
+      "diffusion_loss": 0.1333706183359027,
+      "state_loss": 39.05126953125
+    },
+    {
+      "step": 4350,
+      "total_loss": 0.0810033893212676,
+      "diffusion_loss": 0.02592526128864847,
+      "state_loss": 0.55078125
+    },
+    {
+      "step": 4400,
+      "total_loss": 0.8429946452379227,
+      "diffusion_loss": 0.21228173840790987,
+      "state_loss": 6.30712890625
+    },
+    {
+      "step": 4450,
+      "total_loss": 0.11283918283879757,
+      "diffusion_loss": 0.05810285313054919,
+      "state_loss": 0.54736328125
+    },
+    {
+      "step": 4500,
+      "total_loss": 0.21498405933380127,
+      "diffusion_loss": 0.10634148062672466,
+      "state_loss": 1.08642578125
+    },
+    {
+      "step": 4550,
+      "total_loss": 5.724946915404871,
+      "diffusion_loss": 0.10268117184750736,
+      "state_loss": 56.22265625
+    },
+    {
+      "step": 4600,
+      "total_loss": 0.11045830347575247,
+      "diffusion_loss": 0.07413017994258553,
+      "state_loss": 0.36328125
+    },
+    {
+      "step": 4650,
+      "total_loss": 0.08638766128569841,
+      "diffusion_loss": 0.07442477252334356,
+      "state_loss": 0.11962890625
+    },
+    {
+      "step": 4700,
+      "total_loss": 0.13375918846577406,
+      "diffusion_loss": 0.07360293657984585,
+      "state_loss": 0.6015625
+    },
+    {
+      "step": 4750,
+      "total_loss": 5.5603224989026785,
+      "diffusion_loss": 0.08097673754673451,
+      "state_loss": 54.79345703125
+    },
+    {
+      "step": 4800,
+      "total_loss": 8.009044824168086,
+      "diffusion_loss": 0.1425898582674563,
+      "state_loss": 78.66455078125
+    },
+    {
+      "step": 4850,
+      "total_loss": 0.07114165648818016,
+      "diffusion_loss": 0.03032134345266968,
+      "state_loss": 0.408203125
+    },
+    {
+      "step": 4900,
+      "total_loss": 14.903500059153885,
+      "diffusion_loss": 0.06873381341574714,
+      "state_loss": 148.34765625
+    },
+    {
+      "step": 4950,
+      "total_loss": 0.2553995680063963,
+      "diffusion_loss": 0.1684855013154447,
+      "state_loss": 0.869140625
+    },
+    {
+      "step": 5000,
+      "total_loss": 0.12715115677565336,
+      "diffusion_loss": 0.09604764101095498,
+      "state_loss": 0.31103515625
+    },
+    {
+      "step": 5050,
+      "total_loss": 0.32876488752663136,
+      "diffusion_loss": 0.31094262190163136,
+      "state_loss": 0.17822265625
+    },
+    {
+      "step": 5100,
+      "total_loss": 3.3990900721400976,
+      "diffusion_loss": 0.024041127879172564,
+      "state_loss": 33.75048828125
+    },
+    {
+      "step": 5150,
+      "total_loss": 1.428873130120337,
+      "diffusion_loss": 0.10817003005649894,
+      "state_loss": 13.20703125
+    },
+    {
+      "step": 5200,
+      "total_loss": 0.15970246866345406,
+      "diffusion_loss": 0.1373880160972476,
+      "state_loss": 0.22314453125
+    },
+    {
+      "step": 5250,
+      "total_loss": 0.18332016002386808,
+      "diffusion_loss": 0.10734359160414897,
+      "state_loss": 0.759765625
+    },
+    {
+      "step": 5300,
+      "total_loss": 0.11973247956484556,
+      "diffusion_loss": 0.10249615099746734,
+      "state_loss": 0.17236328125
+    },
+    {
+      "step": 5350,
+      "total_loss": 0.1247109854593873,
+      "diffusion_loss": 0.09932036092504859,
+      "state_loss": 0.25390625
+    },
+    {
+      "step": 5400,
+      "total_loss": 7.996463620103896,
+      "diffusion_loss": 0.04919780290219933,
+      "state_loss": 79.47265625
+    },
+    {
+      "step": 5450,
+      "total_loss": 8.63399572018534,
+      "diffusion_loss": 0.0668078827438876,
+      "state_loss": 85.671875
+    },
+    {
+      "step": 5500,
+      "total_loss": 0.09425937436753884,
+      "diffusion_loss": 0.07331210974371061,
+      "state_loss": 0.20947265625
+    },
+    {
+      "step": 5550,
+      "total_loss": 3.114171619527042,
+      "diffusion_loss": 0.03834155324148014,
+      "state_loss": 30.75830078125
+    },
+    {
+      "step": 5600,
+      "total_loss": 0.1449419418349862,
+      "diffusion_loss": 0.04455132223665714,
+      "state_loss": 1.00390625
+    },
+    {
+      "step": 5650,
+      "total_loss": 0.15173087269067764,
+      "diffusion_loss": 0.1325902473181486,
+      "state_loss": 0.19140625
+    },
+    {
+      "step": 5700,
+      "total_loss": 10.189968694467098,
+      "diffusion_loss": 0.08952912804670632,
+      "state_loss": 101.00439453125
+    },
+    {
+      "step": 5750,
+      "total_loss": 5.784785421565175,
+      "diffusion_loss": 0.19040065351873636,
+      "state_loss": 55.94384765625
+    },
+    {
+      "step": 5800,
+      "total_loss": 0.14733519684523344,
+      "diffusion_loss": 0.12780394684523344,
+      "state_loss": 0.1953125
+    },
+    {
+      "step": 5850,
+      "total_loss": 15.498346492648125,
+      "diffusion_loss": 0.14834635145962238,
+      "state_loss": 153.5
+    },
+    {
+      "step": 5900,
+      "total_loss": 5.675453839823604,
+      "diffusion_loss": 0.1095848738332279,
+      "state_loss": 55.65869140625
+    },
+    {
+      "step": 5950,
+      "total_loss": 2.275364150526002,
+      "diffusion_loss": 0.014768473571166396,
+      "state_loss": 22.60595703125
+    },
+    {
+      "step": 6000,
+      "total_loss": 0.09121133139706217,
+      "diffusion_loss": 0.06752969077206217,
+      "state_loss": 0.23681640625
+    },
+    {
+      "step": 6050,
+      "total_loss": 0.08508123829960823,
+      "diffusion_loss": 0.037962097325362265,
+      "state_loss": 0.47119140625
+    },
+    {
+      "step": 6100,
+      "total_loss": 0.08166524488478899,
+      "diffusion_loss": 0.04162618098780513,
+      "state_loss": 0.400390625
+    },
+    {
+      "step": 6150,
+      "total_loss": 0.31655112374573946,
+      "diffusion_loss": 0.059324558038497344,
+      "state_loss": 2.572265625
+    },
+    {
+      "step": 6200,
+      "total_loss": 8.213322915136814,
+      "diffusion_loss": 0.08319536410272121,
+      "state_loss": 81.30126953125
+    },
+    {
+      "step": 6250,
+      "total_loss": 0.13800440914928913,
+      "diffusion_loss": 0.11417628591880202,
+      "state_loss": 0.23828125
+    },
+    {
+      "step": 6300,
+      "total_loss": 1.34271792601794,
+      "diffusion_loss": 0.04252261063084006,
+      "state_loss": 13.001953125
+    },
+    {
+      "step": 6350,
+      "total_loss": 10.719727602787316,
+      "diffusion_loss": 0.12871190125588328,
+      "state_loss": 105.91015625
+    },
+    {
+      "step": 6400,
+      "total_loss": 0.06313857901841402,
+      "diffusion_loss": 0.04531631286954507,
+      "state_loss": 0.17822265625
+    },
+    {
+      "step": 6450,
+      "total_loss": 0.09989135060459375,
+      "diffusion_loss": 0.05438353883801028,
+      "state_loss": 0.455078125
+    },
+    {
+      "step": 6500,
+      "total_loss": 0.2602438125759363,
+      "diffusion_loss": 0.12411099893506616,
+      "state_loss": 1.361328125
+    },
+    {
+      "step": 6550,
+      "total_loss": 1.002111304551363,
+      "diffusion_loss": 0.06441594060743228,
+      "state_loss": 9.376953125
+    },
+    {
+      "step": 6600,
+      "total_loss": 0.9071328267455101,
+      "diffusion_loss": 0.13115624198690057,
+      "state_loss": 7.759765625
+    },
+    {
+      "step": 6650,
+      "total_loss": 21.670043412130326,
+      "diffusion_loss": 0.09968098544050008,
+      "state_loss": 215.70361328125
+    },
+    {
+      "step": 6700,
+      "total_loss": 0.10345101729035378,
+      "diffusion_loss": 0.06199593935161829,
+      "state_loss": 0.41455078125
+    },
+    {
+      "step": 6750,
+      "total_loss": 0.14395623747259378,
+      "diffusion_loss": 0.05894647282548249,
+      "state_loss": 0.85009765625
+    },
+    {
+      "step": 6800,
+      "total_loss": 6.4116943115368485,
+      "diffusion_loss": 0.02199688000837341,
+      "state_loss": 63.89697265625
+    },
+    {
+      "step": 6850,
+      "total_loss": 0.3168496321886778,
+      "diffusion_loss": 0.07270900573348626,
+      "state_loss": 2.44140625
+    },
+    {
+      "step": 6900,
+      "total_loss": 3.6773178689181805,
+      "diffusion_loss": 0.05890944239217788,
+      "state_loss": 36.18408203125
+    },
+    {
+      "step": 6950,
+      "total_loss": 0.22620471753180027,
+      "diffusion_loss": 0.19319690624251962,
+      "state_loss": 0.330078125
+    },
+    {
+      "step": 7000,
+      "total_loss": 20.961543947458267,
+      "diffusion_loss": 0.04494295711629093,
+      "state_loss": 209.166015625
+    },
+    {
+      "step": 7050,
+      "total_loss": 0.09019152913242579,
+      "diffusion_loss": 0.07822864083573222,
+      "state_loss": 0.11962890625
+    },
+    {
+      "step": 7100,
+      "total_loss": 0.21904282132163644,
+      "diffusion_loss": 0.19555649324320257,
+      "state_loss": 0.23486328125
+    },
+    {
+      "step": 7150,
+      "total_loss": 0.19305218115914613,
+      "diffusion_loss": 0.03655803416040726,
+      "state_loss": 1.56494140625
+    },
+    {
+      "step": 7200,
+      "total_loss": 3.785912634804845,
+      "diffusion_loss": 0.1893795716459863,
+      "state_loss": 35.96533203125
+    },
+    {
+      "step": 7250,
+      "total_loss": 0.07412428548559546,
+      "diffusion_loss": 0.05708326806779951,
+      "state_loss": 0.17041015625
+    },
+    {
+      "step": 7300,
+      "total_loss": 0.10735613154247403,
+      "diffusion_loss": 0.0932448027888313,
+      "state_loss": 0.14111328125
+    },
+    {
+      "step": 7350,
+      "total_loss": 0.17904965952038765,
+      "diffusion_loss": 0.11571958212880418,
+      "state_loss": 0.63330078125
+    },
+    {
+      "step": 7400,
+      "total_loss": 0.1734930956736207,
+      "diffusion_loss": 0.03789739322382957,
+      "state_loss": 1.35595703125
+    },
+    {
+      "step": 7450,
+      "total_loss": 13.178362502716482,
+      "diffusion_loss": 0.08554059721063823,
+      "state_loss": 130.92822265625
+    },
+    {
+      "step": 7500,
+      "total_loss": 16.89100697194226,
+      "diffusion_loss": 0.05287111416691914,
+      "state_loss": 168.38134765625
+    },
+    {
+      "step": 7550,
+      "total_loss": 8.202779119834304,
+      "diffusion_loss": 0.08539609890431166,
+      "state_loss": 81.173828125
+    },
+    {
+      "step": 7600,
+      "total_loss": 0.09180008247494698,
+      "diffusion_loss": 0.056448519229888916,
+      "state_loss": 0.353515625
+    },
+    {
+      "step": 7650,
+      "total_loss": 7.044763196259737,
+      "diffusion_loss": 0.05155035213101655,
+      "state_loss": 69.93212890625
+    },
+    {
+      "step": 7700,
+      "total_loss": 1.450284918770194,
+      "diffusion_loss": 0.12840988475363702,
+      "state_loss": 13.21875
+    },
+    {
+      "step": 7750,
+      "total_loss": 0.06806584913283587,
+      "diffusion_loss": 0.035058038018178195,
+      "state_loss": 0.330078125
+    },
+    {
+      "step": 7800,
+      "total_loss": 0.17699553829152137,
+      "diffusion_loss": 0.14511077260249294,
+      "state_loss": 0.31884765625
+    },
+    {
+      "step": 7850,
+      "total_loss": 0.07288180792238563,
+      "diffusion_loss": 0.052715792233357206,
+      "state_loss": 0.20166015625
+    },
+    {
+      "step": 7900,
+      "total_loss": 20.417325166985393,
+      "diffusion_loss": 0.055167435319162905,
+      "state_loss": 203.62158203125
+    },
+    {
+      "step": 7950,
+      "total_loss": 1.9138303166255355,
+      "diffusion_loss": 0.032140829134732485,
+      "state_loss": 18.81689453125
+    },
+    {
+      "step": 8000,
+      "total_loss": 0.2253137230873108,
+      "diffusion_loss": 0.18366333283483982,
+      "state_loss": 0.41650390625
+    },
+    {
+      "step": 8050,
+      "total_loss": 0.19978701323270798,
+      "diffusion_loss": 0.04197451309300959,
+      "state_loss": 1.578125
+    },
+    {
+      "step": 8100,
+      "total_loss": 0.17059912160038948,
+      "diffusion_loss": 0.15731786750257015,
+      "state_loss": 0.1328125
+    },
+    {
+      "step": 8150,
+      "total_loss": 0.17762170918285847,
+      "diffusion_loss": 0.14261194225400686,
+      "state_loss": 0.35009765625
+    },
+    {
+      "step": 8200,
+      "total_loss": 0.2172587038949132,
+      "diffusion_loss": 0.20065713807707652,
+      "state_loss": 0.166015625
+    },
+    {
+      "step": 8250,
+      "total_loss": 0.056150030344724655,
+      "diffusion_loss": 0.03442151308991015,
+      "state_loss": 0.21728515625
+    },
+    {
+      "step": 8300,
+      "total_loss": 5.340059045236558,
+      "diffusion_loss": 0.03239279426634312,
+      "state_loss": 53.07666015625
+    },
+    {
+      "step": 8350,
+      "total_loss": 0.13493787706829607,
+      "diffusion_loss": 0.10036756534827873,
+      "state_loss": 0.345703125
+    },
+    {
+      "step": 8400,
+      "total_loss": 0.09141447208821774,
+      "diffusion_loss": 0.055037518264725804,
+      "state_loss": 0.36376953125
+    },
+    {
+      "step": 8450,
+      "total_loss": 0.8035324765369296,
+      "diffusion_loss": 0.08551488630473614,
+      "state_loss": 7.18017578125
+    },
+    {
+      "step": 8500,
+      "total_loss": 5.0046964045614,
+      "diffusion_loss": 0.006795965979108587,
+      "state_loss": 49.97900390625
+    },
+    {
+      "step": 8550,
+      "total_loss": 0.16163915395736694,
+      "diffusion_loss": 0.14127782033756375,
+      "state_loss": 0.20361328125
+    },
+    {
+      "step": 8600,
+      "total_loss": 0.06350158667191863,
+      "diffusion_loss": 0.04690002393908799,
+      "state_loss": 0.166015625
+    },
+    {
+      "step": 8650,
+      "total_loss": 0.16679110750555992,
+      "diffusion_loss": 0.12494540039915591,
+      "state_loss": 0.41845703125
+    },
+    {
+      "step": 8700,
+      "total_loss": 30.15391419455409,
+      "diffusion_loss": 0.13960862159729004,
+      "state_loss": 300.14306640625
+    },
+    {
+      "step": 8750,
+      "total_loss": 0.10499272309243679,
+      "diffusion_loss": 0.06729741080198437,
+      "state_loss": 0.376953125
+    },
+    {
+      "step": 8800,
+      "total_loss": 26.34930036799051,
+      "diffusion_loss": 0.10120470600668341,
+      "state_loss": 262.48095703125
+    },
+    {
+      "step": 8850,
+      "total_loss": 0.12239864282310009,
+      "diffusion_loss": 0.10203731339424849,
+      "state_loss": 0.20361328125
+    },
+    {
+      "step": 8900,
+      "total_loss": 0.16916335932910442,
+      "diffusion_loss": 0.1468977383337915,
+      "state_loss": 0.22265625
+    },
+    {
+      "step": 8950,
+      "total_loss": 0.20102689787745476,
+      "diffusion_loss": 0.16601713187992573,
+      "state_loss": 0.35009765625
+    },
+    {
+      "step": 9000,
+      "total_loss": 0.12130064144730568,
+      "diffusion_loss": 0.10797056555747986,
+      "state_loss": 0.13330078125
+    },
+    {
+      "step": 9050,
+      "total_loss": 0.051648407243192196,
+      "diffusion_loss": 0.023328094859607518,
+      "state_loss": 0.283203125
+    },
+    {
+      "step": 9100,
+      "total_loss": 0.9947378905490041,
+      "diffusion_loss": 0.11778474831953645,
+      "state_loss": 8.76953125
+    },
+    {
+      "step": 9150,
+      "total_loss": 1.8386402446776628,
+      "diffusion_loss": 0.050749636720865965,
+      "state_loss": 17.87890625
+    },
+    {
+      "step": 9200,
+      "total_loss": 0.07073578890413046,
+      "diffusion_loss": 0.04490571178030223,
+      "state_loss": 0.25830078125
+    },
+    {
+      "step": 9250,
+      "total_loss": 1.4426001319661736,
+      "diffusion_loss": 0.12653571472037584,
+      "state_loss": 13.16064453125
+    },
+    {
+      "step": 9300,
+      "total_loss": 0.1264450028538704,
+      "diffusion_loss": 0.06921843579038978,
+      "state_loss": 0.572265625
+    },
+    {
+      "step": 9350,
+      "total_loss": 0.12132563628256321,
+      "diffusion_loss": 0.09163813333725557,
+      "state_loss": 0.296875
+    },
+    {
+      "step": 9400,
+      "total_loss": 15.741601312533021,
+      "diffusion_loss": 0.23906231368891895,
+      "state_loss": 155.025390625
+    },
+    {
+      "step": 9450,
+      "total_loss": 0.03686130326241255,
+      "diffusion_loss": 0.021187475125771016,
+      "state_loss": 0.15673828125
+    },
+    {
+      "step": 9500,
+      "total_loss": 3.794278562068939,
+      "diffusion_loss": 0.06571401382097974,
+      "state_loss": 37.28564453125
+    },
+    {
+      "step": 9550,
+      "total_loss": 2.591611214913428,
+      "diffusion_loss": 0.08594721113331616,
+      "state_loss": 25.056640625
+    },
+    {
+      "step": 9600,
+      "total_loss": 7.873363873804919,
+      "diffusion_loss": 0.035863661440089345,
+      "state_loss": 78.375
+    },
+    {
+      "step": 9650,
+      "total_loss": 25.761797089129686,
+      "diffusion_loss": 0.16160140337888151,
+      "state_loss": 256.001953125
+    },
+    {
+      "step": 9700,
+      "total_loss": 19.568523465655744,
+      "diffusion_loss": 0.15250802220543846,
+      "state_loss": 194.16015625
+    },
+    {
+      "step": 9750,
+      "total_loss": 7.922609682194889,
+      "diffusion_loss": 0.06689695850946009,
+      "state_loss": 78.55712890625
+    },
+    {
+      "step": 9800,
+      "total_loss": 0.08328845538198948,
+      "diffusion_loss": 0.0500853315461427,
+      "state_loss": 0.33203125
+    },
+    {
+      "step": 9850,
+      "total_loss": 9.381019638385624,
+      "diffusion_loss": 0.038636930810753256,
+      "state_loss": 93.423828125
+    },
+    {
+      "step": 9900,
+      "total_loss": 0.31937887892127037,
+      "diffusion_loss": 0.06561911338940263,
+      "state_loss": 2.53759765625
+    },
+    {
+      "step": 9950,
+      "total_loss": 0.4439248647540808,
+      "diffusion_loss": 0.35076079331338406,
+      "state_loss": 0.931640625
+    },
+    {
+      "step": 10000,
+      "total_loss": 0.19792787497863173,
+      "diffusion_loss": 0.18244935892289504,
+      "state_loss": 0.15478515625
+    }
+  ],
+  "val_losses": [
+    {
+      "step": 1000,
+      "val_loss": 4.957909943778068
+    },
+    {
+      "step": 2000,
+      "val_loss": 4.977410145029426
+    },
+    {
+      "step": 3000,
+      "val_loss": 5.067794650048017
+    },
+    {
+      "step": 4000,
+      "val_loss": 4.931551677137613
+    },
+    {
+      "step": 5000,
+      "val_loss": 4.961212813789025
+    },
+    {
+      "step": 6000,
+      "val_loss": 4.968866896415129
+    },
+    {
+      "step": 7000,
+      "val_loss": 4.907404927089811
+    },
+    {
+      "step": 8000,
+      "val_loss": 5.022828242555261
+    },
+    {
+      "step": 9000,
+      "val_loss": 5.077199129909277
+    },
+    {
+      "step": 10000,
+      "val_loss": 5.0295750463940205
+    }
+  ],
+  "config": {
+    "lr": 0.0001,
+    "batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "max_train_steps": 10000,
+    "diffusion_loss_weight": 1.0,
+    "state_loss_weight": 0.1
+  }
+}

@@ -267,7 +267,6 @@ class MemGameNGen(nn.Module):
             beta_end=0.012,
             beta_schedule="scaled_linear",
             clip_sample=False,
-            set_alpha_cumprod_to_one=False,
             prediction_type="epsilon",
         )
 
