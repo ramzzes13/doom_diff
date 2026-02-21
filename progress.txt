@@ -35,15 +35,31 @@ Started: Sat Feb 21 09:43:48 PM MSK 2026
 - Updated paper Table 2 and Table 3 with real baseline numbers
 - Cross-verified ALL paper numbers against evaluation_results.json, baseline_evaluation_results.json, training_log.json, and ddim_ablation.json
 
-## All Tasks COMPLETE
+## All Tasks Status
 1. [DONE] ViZDoom environment setup and data collection (120 trajectories)
 2. [DONE] Memory-augmented action-conditioned diffusion model (MemGameNGen)
 3. [DONE] Training pipeline with state-consistency supervision (10K steps, H100)
 4. [DONE] Real-time inference with efficient sampling (4-step DDIM, 7.5 FPS)
 5. [DONE] Evaluation with state-sensitive metrics (PSNR, LPIPS, controllability, scripted tests)
-6. [DONE] Full ICML-format LaTeX paper (8 pages, all real results, verified citations)
+6. [NEEDS FIX] Full ICML-format LaTeX paper — REVIEW FAILED, see below
 7. [DONE] Baseline model training and evaluation with fair comparison
 8. [DONE] DDIM sampling steps ablation experiment
+
+## Review (2026-02-22) — FAIL
+Full review written to review.txt.
+
+### CRITICAL FIX REQUIRED:
+- paper/references.bib: zhu2026worldarena citation has HALLUCINATED first author
+  "Zhu, Yushu" — actual first author is "Shang, Yu" (arXiv:2602.08971)
+  Must fix author field and add arXiv ID.
+
+### RECOMMENDED FIXES:
+- Soften speculative claims in Discussion (lines ~307, ~367):
+  remove "significant"/"substantial" from unsupported predictions
+- Replace "meaningful" with "non-trivial" at lines ~320, ~387
+- Update 3 BibTeX entries to reflect accepted venues:
+  he2025dws (ICLR 2025 WS), song2025historyvideo (ICML 2025),
+  yu2025malt (CVPR 2025 WS)
 
 ## Optional (not done, would require additional training runs)
 - Memory tokens ablation (K=4, 8, 16) - requires 3 additional training runs
@@ -52,11 +68,10 @@ Started: Sat Feb 21 09:43:48 PM MSK 2026
 ## Key Files
 - Paper: paper/main.tex (8 pages, compiles cleanly)
 - Paper PDF: paper/main.pdf
-- References: paper/references.bib (25 entries, 19 cited, all verified)
+- References: paper/references.bib (25 entries, 19 cited — 1 CITATION ERROR)
 - Figures: paper/figures/*.pdf (8 figures from real data)
 - Results: results/evaluation_results.json, results/baseline_evaluation_results.json, results/ddim_ablation.json
 - Training log: results/logs/training_log.json
 - Checkpoints: checkpoints/diffusion/memgamengen_final.pt (10K steps)
 - Baseline checkpoint: checkpoints/baseline/memgamengen_final.pt (10K steps)
-
-<promise>COMPLETE</promise>
+- Review: review.txt

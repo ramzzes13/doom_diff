@@ -6,16 +6,16 @@
     "lpips_std": 0.09578252663203425
   },
   "autoregressive": {
-    "overall_psnr_mean": 16.467411690950392,
-    "overall_psnr_std": 0.6129917947129194,
-    "psnr_horizon_10": 16.362676849365233,
-    "psnr_horizon_20": 16.380874910354613,
-    "psnr_horizon_50": 16.474000484466554
+    "overall_psnr_mean": 16.46451652646065,
+    "overall_psnr_std": 0.5032380544874399,
+    "psnr_horizon_10": 16.36249373435974,
+    "psnr_horizon_20": 16.298839716911317,
+    "psnr_horizon_50": 16.44687899017334
   },
   "performance": {
-    "inference_fps": 7.5505681732774805,
-    "latency_ms": 132.44036436080933,
-    "latency_std_ms": 0.19370601009190674
+    "inference_fps": 7.588506941017567,
+    "latency_ms": 131.77822828292847,
+    "latency_std_ms": 0.2466005613256829
   },
   "comparison": {
     "tf_psnr_baseline": 15.989581851959228,
@@ -24,7 +24,7 @@
     "tf_lpips_baseline": 0.5239652478694916,
     "tf_lpips_memory": 0.5051831752061844,
     "tf_lpips_delta": 0.018782072663307225,
-    "fps_baseline": 7.5505681732774805,
+    "fps_baseline": 7.588506941017567,
     "fps_memory": 7.536745484996379
   }
 }
